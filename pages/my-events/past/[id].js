@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import Head from "next/head";
 import Link from "next/link";
 import { gql } from "@apollo/client";
 import client from "../../../apollo-client";
@@ -6,12 +7,14 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useAccount } from "wagmi";
 import connectContract from "../../../utils/connectContract";
 import formatTimestamp from "../../../utils/formatTimestamp";
-import Alert from "../../../components/Alert";
-import Head from "next/head";
 import DashboardNav from "../../../components/DashboardNav";
+import Alert from "../../../components/Alert";
 
-function PastEvent() {
+function PastEvent({ event }) {
   const { data: account } = useAccount();
+
+  console.log("event", event);
+
   const [success, setSuccess] = useState(null);
   const [message, setMessage] = useState(null);
   const [loading, setLoading] = useState(null);
@@ -36,6 +39,9 @@ function PastEvent() {
       }
     } catch (error) {
       setSuccess(false);
+      // setMessage(
+      //   `Error: ${process.env.NEXT_PUBLIC_TESTNET_EXPLORER_URL}tx/${txn.hash}`
+      // );
       setMessage("Error!");
       setLoading(false);
       console.log(error);
@@ -66,6 +72,9 @@ function PastEvent() {
       }
     } catch (error) {
       setSuccess(false);
+      // setMessage(
+      //   `Error: ${process.env.NEXT_PUBLIC_TESTNET_EXPLORER_URL}tx/${txn.hash}`
+      // );
       setMessage("Error!");
       setLoading(false);
       console.log(error);
@@ -73,6 +82,7 @@ function PastEvent() {
   };
 
   function checkIfConfirmed(event, address) {
+    // console.log(event.confirmedAttendees);
     for (let i = 0; i < event.confirmedAttendees.length; i++) {
       let confirmedAddress = event.confirmedAttendees[i].attendee.id;
       if (confirmedAddress.toLowerCase() == address.toLowerCase()) {
